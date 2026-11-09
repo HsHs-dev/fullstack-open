@@ -5,7 +5,7 @@ const Notification = ({message, className}) => {
   }
 
   return (
-    <div className={className} >
+    <div className={`notification ${className}`} role="status">
       {message}
     </div>
   )

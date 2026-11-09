@@ -10,14 +10,20 @@ const Persons = ({persons, filter, removePerson}) => {
   const displayedPersons = filter.trim().length === 0 ? persons : filtered()
 
   return (
-    <div>
+    <ul className="contact-list">
+      {displayedPersons.length === 0 && (
+        <li className="empty-state">{filter.trim() ? 'No contacts match your search.' : 'No contacts yet. Add your first one above.'}</li>
+      )}
       {displayedPersons.map(person => (
-          <div key={person.id}>
-            <span>{person.name} {person.number} </span>
-            <button onClick={() => removePerson(person.id)}>delete</button>
-          </div>
+          <li className="contact" key={person.id}>
+            <div className="contact-details">
+              <span className="contact-name">{person.name}</span>
+              <a href={`tel:${person.number}`}>{person.number}</a>
+            </div>
+            <button className="delete-button" aria-label={`Delete ${person.name}`} onClick={() => removePerson(person.id)}>Delete</button>
+          </li>
      ))}
-    </div>
+    </ul>
   )
 }
 

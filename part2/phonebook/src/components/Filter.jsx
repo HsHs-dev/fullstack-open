@@ -1,10 +1,8 @@
-const Filter = ({search, handleSearchChange}) => {
-  return (
-    <div>
-      filter shown with
-      <input value={search} onChange={handleSearchChange} />
-    </div>
-  )
-}
+const Filter = ({search, handleSearchChange}) => (
+  <label className="search-field">
+    Search contacts
+    <input type="search" placeholder="Search by name…" value={search} onChange={handleSearchChange} />
+  </label>
+)
 
 export default Filter
