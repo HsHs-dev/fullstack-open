@@ -14,7 +14,8 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
+    "dotenv": "^18.0.9",
     "express": "^5.1.0",
-    "mongoose": "^8.19.1"
+    "mongoose": "^8.24.8"
   }
 }
