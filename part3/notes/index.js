@@ -13,9 +13,23 @@ const requestLogger = (req, res, next) => {
   next();
 };
 
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: "unkown endpoint" });
+};
+
+const errorHandler = (err, req, res, next) => {
+  console.log(err);
+
+  if (err.name === "CastError") {
+    return res.status(400).send({ error: "malformatted id" });
+  }
+
+  next(err);
+};
+
+app.use(express.static("dist"));
 app.use(express.json());
 app.use(requestLogger);
-app.use(express.static("dist"));
 
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
@@ -28,16 +42,43 @@ app.get("/api/notes", (request, response) => {
   });
 });
 
-app.get("/api/notes/:id", (request, response) => {
-  Note.findById(request.params.id).then((note) => {
-    response.json(note);
-  });
+app.get("/api/notes/:id", (request, response, next) => {
+  Note.findById(request.params.id)
+    .then((note) => {
+      if (note) {
+        response.json(note);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
-app.delete("/api/notes/:id", (request, response) => {
-  Note.findByIdAndDelete(request.params.id).then((deletedNote) => {
-    response.status(204).end();
-  });
+app.delete("/api/notes/:id", (request, response, next) => {
+  Note.findByIdAndDelete(request.params.id)
+    .then((deletedNote) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
+});
+
+app.put("/api/notes/:id", (req, res, next) => {
+  const { content, important } = req.body;
+
+  Note.findById(req.params.id)
+    .then((note) => {
+      if (!note) {
+        return res.status(404).end();
+      }
+
+      note.content = content;
+      note.important = important;
+
+      return note.save().then((updatedNote) => {
+        res.json(updatedNote);
+      });
+    })
+    .catch((error) => next(error));
 });
 
 app.post("/api/notes", (request, response) => {
@@ -59,11 +100,8 @@ app.post("/api/notes", (request, response) => {
   });
 });
 
-const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: "unkown endpoint" });
-};
-
 app.use(unknownEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
