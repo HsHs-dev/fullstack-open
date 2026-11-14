@@ -69,7 +69,7 @@ const App = () => {
       if (existing.number === newNumber) {
         displayMessage(`${newName} is already added to phonebook`, 'change')
       } else if (confirm(
-      `${newName} is already in the phonebook, replace the old number with a new one?`)) {
+        `${newName} is already in the phonebook, replace the old number with a new one?`)) {
         personService
           .update(existing.id, personObject)
           .then(returnedPerson => {
@@ -82,15 +82,20 @@ const App = () => {
             )
             setPersons(persons.filter(p => p != existing))
           })
-          displayMessage(`${newName} number changed`, 'change')
+        displayMessage(`${newName} number changed`, 'change')
       }
     } else {
       personService
-       .create(personObject)
-       .then(newPerson => {
-         setPersons(persons.concat(newPerson))
-       })
-       displayMessage(`Added ${newName}`, 'add')
+        .create(personObject)
+        .then((newPerson) => {
+          setPersons(persons.concat(newPerson));
+          displayMessage(`Added ${newName}`, "add");
+        })
+        .catch((error) => {
+          const message = error.response.data.error;
+          console.log(message);
+          displayMessage(message, "error");
+        });
     }
 
     setNewName('')
