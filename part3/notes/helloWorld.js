@@ -1,4 +1,4 @@
-const http = require('http')
+const http = require("http")
 
 let notes = [
   {
@@ -19,7 +19,7 @@ let notes = [
 ]
 
 const app = http.createServer((request, response) => {
-  response.writeHead(200, { 'Content-type': 'application/json' })
+  response.writeHead(200, { "Content-type": "application/json" })
   response.end(JSON.stringify(notes))
 })
 
