@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const config = require("./utils/config");
 const logger = require("./utils/logger");
-const middleWare = require("./utils/middleware");
+const middleware = require("./utils/middleware");
 const notesRouter = require("./controlers/notes");
 
 const app = express();
@@ -23,8 +23,8 @@ app.use(express.json());
 
 app.use("/api/notes", notesRouter);
 
-app.use(middleWare.unknownEndpoint);
-app.use(middleWare.errorHandler);
-app.use(middleWare.requestLogger);
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
+app.use(middleware.requestLogger);
 
 module.exports = app;
