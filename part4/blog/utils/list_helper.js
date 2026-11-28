@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 const dummy = (blogs) => {
   return 1;
 };
@@ -15,4 +17,19 @@ const favoriteBlog = (blogs) => {
       );
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) return null;
+  const authorsOccurences = _.countBy(blogs, "author");
+  const mostFrequentAuthor = _.max(_.values(authorsOccurences));
+  const result = {
+    author: _.findKey(
+      authorsOccurences,
+      (occurs) => occurs === mostFrequentAuthor,
+    ),
+    blogs: mostFrequentAuthor,
+  };
+
+  return result;
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };
