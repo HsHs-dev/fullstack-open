@@ -5,7 +5,6 @@ const dummy = (blogs) => {
 };
 
 const totalLikes = (blogs) => {
-  console.log(blogs);
   return blogs.reduce((total, blog) => blog.likes + total, 0);
 };
 
@@ -32,4 +31,17 @@ const mostBlogs = (blogs) => {
   return result;
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) return null;
+
+  const authors = _.groupBy(blogs, "author");
+  const authorsAndLikes = _.map(authors, (val, key) => {
+    return { author: key, likes: _.sumBy(val, "likes") };
+  });
+
+  const result = _.maxBy(authorsAndLikes, "likes");
+
+  return result;
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes };

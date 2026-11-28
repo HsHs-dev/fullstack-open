@@ -207,3 +207,129 @@ describe("most mentioned blog", () => {
     });
   });
 });
+
+describe("most likes", () => {
+  test("of empty list is null", () => {
+    const blogs = [];
+    const result = listHelper.mostLikes(blogs);
+    assert.strictEqual(result, null);
+  });
+
+  const listWithOneBlog = [
+    {
+      _id: "5a422aa71b54a676234d17f8",
+      title: "Go To Statement Considered Harmful",
+      author: "Edsger W. Dijkstra",
+      url: "https://example.com/goto",
+      likes: 12,
+      __v: 0,
+    },
+  ];
+
+  test("when list has only one blog, returns its author and likes", () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    assert.deepStrictEqual(result, {
+      author: "Edsger W. Dijkstra",
+      likes: 12,
+    });
+  });
+
+  const listWithMultipleBlogs = [
+    {
+      _id: "5a422aa71b54a676234d17f8",
+      title: "Go To Statement Considered Harmful",
+      author: "Edsger W. Dijkstra",
+      url: "https://example.com/goto",
+      likes: 12,
+      __v: 0,
+    },
+    {
+      _id: "6b018372e95699f35772e8e8",
+      title: "Understanding CSS Grid",
+      author: "Josh Comeau",
+      url: "https://example.com/css-grid",
+      likes: 5,
+      __v: 0,
+    },
+    {
+      _id: "6b018e89e8d053d4b3206c54",
+      title: "Game Engine Architecture",
+      author: "Fabien Sanglard",
+      url: "https://example.com/game-engine",
+      likes: 21,
+      __v: 0,
+    },
+    {
+      _id: "6b018e89e8d053d4b3206c55",
+      title: "The Magic of CSS",
+      author: "Josh Comeau",
+      url: "https://example.com/css-magic",
+      likes: 7,
+      __v: 0,
+    },
+    {
+      _id: "6b018e89e8d053d4b3206c56",
+      title: "Understanding Algorithms",
+      author: "Edsger W. Dijkstra",
+      url: "https://example.com/algorithms",
+      likes: 15,
+      __v: 0,
+    },
+    {
+      _id: "6b018e89e8d053d4b3206c57",
+      title: "A Guide to React Rendering",
+      author: "Josh Comeau",
+      url: "https://example.com/react-rendering",
+      likes: 4,
+      __v: 0,
+    },
+  ];
+
+  test("of a bigger list returns the author with most total likes", () => {
+    const result = listHelper.mostLikes(listWithMultipleBlogs);
+    assert.deepStrictEqual(result, {
+      author: "Edsger W. Dijkstra",
+      likes: 27,
+    });
+  });
+
+  test("when multiple authors are tied, returns any of them", () => {
+    const blogs = [
+      { author: "Alice", likes: 10 },
+      { author: "Bob", likes: 25 },
+      { author: "Alice", likes: 15 },
+      { author: "Charlie", likes: 5 },
+    ];
+
+    const result = listHelper.mostLikes(blogs);
+
+    assert.ok(["Alice", "Bob"].includes(result.author));
+    assert.strictEqual(result.likes, 25);
+  });
+
+  test("when a blog has zero likes, returns its author with zero likes", () => {
+    const blogs = [{ author: "Alice", likes: 0 }];
+
+    const result = listHelper.mostLikes(blogs);
+
+    assert.deepStrictEqual(result, {
+      author: "Alice",
+      likes: 0,
+    });
+  });
+
+  test("when all blogs belong to one author, sums all likes", () => {
+    const blogs = [
+      { author: "Alice", likes: 10 },
+      { author: "Alice", likes: 20 },
+      { author: "Alice", likes: 30 },
+    ];
+
+    const result = listHelper.mostLikes(blogs);
+
+    assert.deepStrictEqual(result, {
+      author: "Alice",
+      likes: 60,
+    });
+  });
+});
